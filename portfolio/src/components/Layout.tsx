@@ -1,4 +1,4 @@
-import { ExternalLink, Github, Menu, ScanSearch, X } from 'lucide-react';
+import { Github, Menu, X } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import { PORTFOLIO_CONFIG } from '../config';
@@ -8,72 +8,75 @@ interface LayoutProps {
 }
 
 const navLinks = [
-  { to: '/', label: 'Home' },
-  { to: '/about', label: 'About the Project' },
-  { to: '/contact', label: 'Contact & Links' },
+  { to: '/', num: '01', label: 'Project Overview' },
+  { to: '/about', num: '02', label: 'About the Project' },
+  { to: '/contact', num: '03', label: 'Contact & Links' },
 ];
 
 export function Layout({ children }: LayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#060b16] text-slate-100">
+    <div className="flex min-h-screen flex-col bg-white text-[#383e45]">
       {/* Top Navigation */}
-      <header className="sticky top-0 z-40 border-b border-slate-800/80 bg-slate-950/85 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
-          <NavLink to="/" className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/20">
-              <ScanSearch className="h-5 w-5 text-white" />
+      <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+          {/* Brand */}
+          <NavLink to="/" className="flex items-center gap-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-blue-600 font-display text-sm font-black tracking-tight text-white">
+              OD
             </div>
-            <div>
-              <span className="block text-sm font-bold tracking-tight text-white">
+            <div className="leading-tight">
+              <span className="block font-display text-sm font-bold text-slate-900">
                 {PORTFOLIO_CONFIG.projectName}
               </span>
-              <span className="block font-mono text-[10px] text-cyan-400">
-                YOLO11 · OpenCV · FastAPI
+              <span className="block font-mono text-[10px] tracking-wide text-slate-500">
+                YOLO11 · Computer Vision
               </span>
             </div>
           </NavLink>
 
-          {/* Desktop Nav */}
-          <nav className="hidden items-center gap-1 md:flex">
+          {/* Desktop Numbered Nav */}
+          <nav className="hidden items-center gap-2 md:flex">
             {navLinks.map((link) => (
               <NavLink
                 key={link.to}
                 to={link.to}
                 end={link.to === '/'}
                 className={({ isActive }) =>
-                  `rounded-lg px-3.5 py-2 text-sm font-medium transition ${
+                  `inline-flex items-center gap-2 rounded-md px-3.5 py-2 font-display text-xs font-semibold transition ${
                     isActive
-                      ? 'bg-cyan-500/15 text-cyan-300 ring-1 ring-cyan-500/30'
-                      : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
+                      ? 'border border-blue-200 bg-blue-50/70 text-blue-700'
+                      : 'border border-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                   }`
                 }
               >
-                {link.label}
+                {({ isActive }) => (
+                  <>
+                    <span
+                      className={`font-mono text-[11px] font-bold ${
+                        isActive ? 'text-blue-600' : 'text-slate-400'
+                      }`}
+                    >
+                      {link.num}
+                    </span>
+                    <span>{link.label}</span>
+                  </>
+                )}
               </NavLink>
             ))}
           </nav>
 
-          {/* Action Buttons */}
-          <div className="hidden items-center gap-2.5 md:flex">
+          {/* Right Action (GitHub only — Launch App removed) */}
+          <div className="hidden items-center md:flex">
             <a
               href={PORTFOLIO_CONFIG.githubUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-xs font-medium text-slate-200 transition hover:border-cyan-500/50 hover:text-cyan-300"
+              className="inline-flex items-center gap-2 rounded-md border border-slate-200 bg-white px-3.5 py-2 font-display text-xs font-bold text-slate-800 transition hover:border-blue-600 hover:text-blue-600"
             >
               <Github className="h-3.5 w-3.5" />
               <span>GitHub</span>
-            </a>
-            <a
-              href={PORTFOLIO_CONFIG.liveAppUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-md shadow-cyan-500/20 transition hover:from-cyan-400 hover:to-blue-500"
-            >
-              <span>Launch App</span>
-              <ExternalLink className="h-3.5 w-3.5" />
             </a>
           </div>
 
@@ -81,7 +84,7 @@ export function Layout({ children }: LayoutProps) {
           <button
             type="button"
             onClick={() => setMobileOpen((prev) => !prev)}
-            className="rounded-lg border border-slate-800 p-2 text-slate-300 md:hidden"
+            className="rounded-md border border-slate-200 p-2 text-slate-700 md:hidden"
             aria-label="Toggle navigation"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -90,8 +93,8 @@ export function Layout({ children }: LayoutProps) {
 
         {/* Mobile Drawer */}
         {mobileOpen && (
-          <div className="border-t border-slate-800 bg-slate-950 px-4 py-4 md:hidden">
-            <nav className="flex flex-col gap-2">
+          <div className="border-t border-slate-200 bg-white px-4 py-4 md:hidden">
+            <nav className="flex flex-col gap-1.5">
               {navLinks.map((link) => (
                 <NavLink
                   key={link.to}
@@ -99,36 +102,26 @@ export function Layout({ children }: LayoutProps) {
                   end={link.to === '/'}
                   onClick={() => setMobileOpen(false)}
                   className={({ isActive }) =>
-                    `rounded-lg px-3 py-2 text-sm font-medium ${
+                    `flex items-center gap-2 rounded-md px-3 py-2 font-display text-sm font-semibold ${
                       isActive
-                        ? 'bg-cyan-500/15 text-cyan-300'
-                        : 'text-slate-300 hover:bg-slate-900'
+                        ? 'border border-blue-200 bg-blue-50 text-blue-700'
+                        : 'text-slate-700 hover:bg-slate-50'
                     }`
                   }
                 >
-                  {link.label}
+                  <span className="font-mono text-xs text-blue-600">{link.num}</span>
+                  <span>{link.label}</span>
                 </NavLink>
               ))}
-              <div className="mt-2 flex gap-2 border-t border-slate-800 pt-3">
-                <a
-                  href={PORTFOLIO_CONFIG.githubUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-slate-700 py-2 text-xs font-medium text-slate-200"
-                >
-                  <Github className="h-3.5 w-3.5" />
-                  <span>GitHub</span>
-                </a>
-                <a
-                  href={PORTFOLIO_CONFIG.liveAppUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 py-2 text-xs font-semibold text-white"
-                >
-                  <span>Launch App</span>
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
-              </div>
+              <a
+                href={PORTFOLIO_CONFIG.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-2 flex items-center justify-center gap-2 rounded-md border border-slate-200 py-2 font-display text-xs font-bold text-slate-800"
+              >
+                <Github className="h-3.5 w-3.5" />
+                <span>GitHub Repository</span>
+              </a>
             </nav>
           </div>
         )}
@@ -137,30 +130,73 @@ export function Layout({ children }: LayoutProps) {
       {/* Page Content */}
       <main className="flex-1">{children}</main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-800/80 bg-slate-950/80">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-6 text-xs text-slate-400 sm:flex-row sm:px-6 lg:px-8">
-          <p>
-            © {new Date().getFullYear()} {PORTFOLIO_CONFIG.projectName} · Built by{' '}
-            <span className="text-slate-200">{PORTFOLIO_CONFIG.developerName}</span>
-          </p>
-          <div className="flex items-center gap-4">
-            <a
-              href={PORTFOLIO_CONFIG.githubUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-cyan-300"
-            >
-              GitHub Repository
-            </a>
-            <a
-              href={PORTFOLIO_CONFIG.liveAppUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-cyan-300"
-            >
-              Live Application
-            </a>
+      {/* Dark Editorial Footer */}
+      <footer className="border-t border-slate-800 bg-[#111827] text-slate-400">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div className="space-y-2">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-slate-500">
+                Project
+              </p>
+              <p className="font-display text-base font-bold text-white">
+                {PORTFOLIO_CONFIG.projectName}
+              </p>
+              <p className="text-xs leading-relaxed text-slate-400">
+                Full-stack computer vision application powered by Ultralytics YOLO11, OpenCV,
+                FastAPI, and React. Built by {PORTFOLIO_CONFIG.developerName}.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-slate-500">
+                Pages
+              </p>
+              <ul className="space-y-1.5 text-xs">
+                {navLinks.map((link) => (
+                  <li key={link.to}>
+                    <NavLink
+                      to={link.to}
+                      className="text-blue-400 transition hover:text-blue-300"
+                    >
+                      {link.num} · {link.label}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="space-y-2">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-slate-500">
+                Repository &amp; Resources
+              </p>
+              <ul className="space-y-1.5 text-xs">
+                <li>
+                  <a
+                    href={PORTFOLIO_CONFIG.githubUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-blue-400 transition hover:text-blue-300"
+                  >
+                    GitHub Repository
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={PORTFOLIO_CONFIG.portfolioUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-blue-400 transition hover:text-blue-300"
+                  >
+                    Live Portfolio (GitHub Pages)
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-10 border-t border-slate-800 pt-6 text-xs text-slate-500">
+            © {new Date().getFullYear()} {PORTFOLIO_CONFIG.projectName}. Academic &amp;
+            Engineering Portfolio.
           </div>
         </div>
       </footer>
