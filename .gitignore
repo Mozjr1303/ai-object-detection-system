@@ -1,0 +1,38 @@
+# Python & Virtual Environment
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Environment variables & secrets
+.env
+.env.local
+.env.*.local
+
+# Model weights (large binary files)
+*.pt
+*.onnx
+*.engine
+*.tflite
+!models/README.md
+
+# Temporary uploads & generated outputs
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/outputs/*
+!backend/outputs/.gitkeep
+backend/history.json
+
+# Node / Frontend / Portfolio
+node_modules/
+frontend/dist/
+portfolio/dist/
+*.local
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
