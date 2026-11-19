@@ -39,17 +39,45 @@ export function LiveDemoSection() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const modelRef = useRef<cocoSsd.ObjectDetection | null>(null);
+  const modelPromiseRef = useRef<Promise<cocoSsd.ObjectDetection> | null>(null);
 
   const [imageSrc, setImageSrc] = useState<string>(SAMPLES[0].src);
   const [imageLabel, setImageLabel] = useState<string>(SAMPLES[0].label);
   const [confidence, setConfidence] = useState<number>(0.35);
-  const [statusText, setStatusText] = useState<string | null>(null);
+  const [modelReady, setModelReady] = useState<boolean>(false);
+  const [statusText, setStatusText] = useState<string | null>('Warming up in-browser AI model...');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [summary, setSummary] = useState<SummaryRow[]>([]);
   const [totalObjects, setTotalObjects] = useState<number>(0);
   const [inferenceMs, setInferenceMs] = useState<number | null>(null);
   const [hasRun, setHasRun] = useState<boolean>(false);
+
+  const ensureModelLoaded = async (): Promise<cocoSsd.ObjectDetection> => {
+    if (modelRef.current) return modelRef.current;
+    if (!modelPromiseRef.current) {
+      modelPromiseRef.current = cocoSsd
+        .load({ base: 'lite_mobilenet_v2' })
+        .then((loaded) => {
+          modelRef.current = loaded;
+          setModelReady(true);
+          setStatusText(null);
+          return loaded;
+        })
+        .catch((err) => {
+          modelPromiseRef.current = null;
+          throw err;
+        });
+    }
+    return modelPromiseRef.current;
+  };
+
+  // Preload the COCO-SSD model on mount so detection is instant when clicked
+  useEffect(() => {
+    ensureModelLoaded().catch(() => {
+      setStatusText(null);
+    });
+  }, []);
 
   // Draw the base image onto the canvas whenever imageSrc changes
   useEffect(() => {
@@ -110,8 +138,8 @@ export function LiveDemoSection() {
     try {
       if (!modelRef.current) {
         setStatusText('Loading in-browser AI model (COCO-SSD)...');
-        modelRef.current = await cocoSsd.load({ base: 'lite_mobilenet_v2' });
       }
+      const model = await ensureModelLoaded();
 
       setStatusText('Running object detection...');
       const img = new Image();
@@ -123,7 +151,7 @@ export function LiveDemoSection() {
       });
 
       const start = performance.now();
-      const predictions = await modelRef.current.detect(img, 30, confidence);
+      const predictions = await model.detect(img, 30, confidence);
       const elapsed = Math.round(performance.now() - start);
 
       // Draw image and bounding boxes on canvas
@@ -325,9 +353,11 @@ export function LiveDemoSection() {
               )}
             </div>
 
-            {statusText && (
+            {statusText ? (
               <p className="font-mono text-xs text-blue-600">{statusText}</p>
-            )}
+            ) : modelReady ? (
+              <p className="font-mono text-xs text-emerald-700">✓ AI model loaded and ready</p>
+            ) : null}
           </div>
 
           {/* Right Canvas & Results */}
