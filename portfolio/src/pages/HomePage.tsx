@@ -1,5 +1,6 @@
 import { ArrowRight, Cpu, Download, Film, Github, Image as ImageIcon, Sliders } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { LiveDemoSection } from '../components/LiveDemoSection';
 import { PORTFOLIO_CONFIG } from '../config';
 
 const highlights = [
@@ -155,14 +156,17 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Section 1: The Project in One Minute */}
+      {/* Section 1: Live Working Example */}
+      <LiveDemoSection />
+
+      {/* Section 2: The Project in One Minute */}
       <section className="border-b border-slate-200 bg-[#f8fafc] py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
             <div className="lg:col-span-4">
               <div className="border-t-2 border-blue-600 pt-3">
                 <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-blue-600">
-                  1 · THE PROJECT
+                  2 · THE PROJECT
                 </span>
               </div>
             </div>
@@ -192,7 +196,7 @@ export function HomePage() {
             <div className="lg:col-span-4">
               <div className="border-t-2 border-blue-600 pt-3">
                 <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-blue-600">
-                  2 · CAPABILITIES
+                  3 · CAPABILITIES
                 </span>
                 <h2 className="mt-2 font-display text-2xl font-extrabold text-slate-900">
                   Project Highlights
@@ -232,7 +236,7 @@ export function HomePage() {
             <div className="lg:col-span-4">
               <div className="border-t-2 border-blue-600 pt-3">
                 <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-blue-600">
-                  3 · TECH STACK
+                  4 · TECH STACK
                 </span>
                 <h2 className="mt-2 flex items-center gap-2 font-display text-2xl font-extrabold text-slate-900">
                   <Cpu className="h-5 w-5 text-blue-600" />
