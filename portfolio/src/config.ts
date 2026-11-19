@@ -11,7 +11,7 @@ export const PORTFOLIO_CONFIG = {
   liveAppUrl:
     import.meta.env.VITE_LIVE_APP_URL || 'http://localhost:5173',
   contactEmail:
-    import.meta.env.VITE_CONTACT_EMAIL || 'developer@example.com',
+    import.meta.env.VITE_CONTACT_EMAIL || 'mosesmakunganyajr@gmail.com',
   linkedinUrl:
     import.meta.env.VITE_LINKEDIN_URL || 'https://linkedin.com/in/your-profile',
   twitterUrl:
